@@ -1,3 +1,5 @@
+//Feito por Juliano Barreira Zorzetto e Breno Rodrigues Muth - 2° Ciclo - ADS Vespertino - Fatec Praia Grande 2022
+
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.text.Normalizer;
@@ -37,7 +39,7 @@ public class Main {
 
             //Sistema de menu simples.
 
-            System.out.println("O que deseja fazer? \n [1] - Cadastrar cidade\n [2] - Visualizar cidades\n [3] - Cadastrar Dose\n [4] - Visualizar Doses \n [5] - Atualizar número de uma dose específica\n [6] - Exibir Tudo\n [7] - Ver cidade e todas as suas doses\n [8] - Atualizar número de doses em sequência\n [9] - Cadastrar nova dose e quantidade em uma cidade\n [0] - Sair do Programa ");
+            System.out.println("O que deseja fazer? \n [1] - Cadastrar cidade\n [2] - Visualizar cidades\n [3] - Cadastrar Dose\n [4] - Visualizar Doses \n [5] - Atualizar número de uma dose específica\n [6] - Exibir Tudo\n [7] - Ver cidade e todas as suas doses\n [8] - Atualizar número de doses em sequência\n [9] - Cadastrar nova dose e quantidade em uma cidade\n [10] - Exportar TODOS os arquivos\n [0] - Sair do Programa ");
             String decisao = in.nextLine();
     
             switch (decisao){
@@ -386,7 +388,7 @@ public class Main {
                     break;
 
                 case "0":
-                    System.out.println("\nObrigado! Feito por Juliano Barreira Zorzetto - 2° Ciclo ADS - Vespertino");
+                    System.out.println("\nObrigado! Feito por Juliano Barreira Zorzetto e Breno Rodrigues Muth - 2° Ciclo ADS - Vespertino");
                     validador = false;
                     break;
             }
