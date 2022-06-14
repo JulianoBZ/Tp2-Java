@@ -2,6 +2,15 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 public class Main {
@@ -138,9 +147,6 @@ public class Main {
                     break;
 
                 case "9":
-
-                listaDose = dose.listarDose(listaDose);
-                listaGeral = aplicadas.all(listaGeral);
         
                 //Pergunta qual cidade, imprime os tipos de doses existentes na lista de doses, e solicita a quantidade a ser inserida
                 String cid3,doseString2;
@@ -164,7 +170,7 @@ public class Main {
                 //Procura se existe a informação da cidade com a dose ao lado, a partir da listaGeral
                 for (int i = 0; i < listaGeral.size()-3;i+=3){
                     if (listaGeral.get(i).equalsIgnoreCase(cid3) && listaGeral.get(i+1).equalsIgnoreCase(doseString2)){
-                        System.out.println("Já cadastrado!");
+                        System.out.println("\n------------\nJá cadastrado!\n------------\n");
                         val2++;
                     }
                 }
@@ -176,6 +182,208 @@ public class Main {
                 //por algum motivo quando o case '9' termina, ele sempre imprime duas vezes o menu, em falha ou sucesso no cadastro.
                     break;
 
+                case "10":
+
+                    int val3 = 0;
+                    boolean validador2 = true;
+                    
+                    //Tenta criar um arquivo com número, para não haver conflito ou tentar escrever em cima de um arquivo já existente, se o próximo número de arquivo estiver disponivel,cria um arquivo com o número disponível
+                    while (validador2){
+                    try {
+                        File csvFinal = new File("csvFinal"+val3+".csv");
+                        if (csvFinal.createNewFile()) {
+                            System.out.println("\n------------\nArquivo Criado: " + csvFinal.getName()+"\n------------\n");
+                            validador2 = false;
+                        } else {
+                            val3 ++;
+                        }
+                        }catch(IOException e){
+                            System.out.println("\n------------\nOcorreu um erro!\n------------\n");
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //Escreve no arquivo dado como disponível anteriormente, colocando o cabeçalho de "Município;Dose;Total Doses Aplicadas", e então escrevendo os dados e pulando uma linha
+                    try {
+                        FileWriter writer = new FileWriter("csvFinal"+val3+".csv");
+                        writer.write("Município;Dose;Total Doses Aplicadas\n");
+                        for(int i = 0; i < listaGeral.size()-1; i+=3){
+                            writer.write(listaGeral.get(i)+";"+listaGeral.get(i+1)+";"+listaGeral.get(i+2)+"\n");
+                        }
+                        writer.close();
+                        System.out.println("------------\nArquivo escrito com sucesso!\n------------\n");
+
+                    }catch (IOException e){
+                        System.out.println("------------\nOcorreu um erro!\n------------\n");
+                        e.printStackTrace();
+                    }
+
+                    //-----------------------------------------------------------------------------------------------------------------------------------
+
+                    val3 = 0;
+                    validador2 = true;
+                    //Tenta criar um arquivo com número, para não haver conflito ou tentar escrever em cima de um arquivo já existente, se o próximo número de arquivo estiver disponivel,cria um arquivo com o número disponível
+                    while (validador2){
+                        try {
+                            File cidadesFinal = new File("cidades"+val3+".bin");
+                            if (cidadesFinal.createNewFile()) {
+                                System.out.println("\n------------\nArquivo Criado: " + cidadesFinal.getName()+"\n------------\n");
+                                validador2 = false;
+                            } else {
+                                val3 ++;
+                            }
+                            }catch(IOException e){
+                                System.out.println("\n------------\nOcorreu um erro!\n------------\n");
+                                e.printStackTrace();
+                            }
+                        }
+
+                        //Escreve no arquivo dado como disponível anteriormente, colocando o cabeçalho de "Município;Dose;Total Doses Aplicadas", e então escrevendo os dados e pulando uma linha
+                    try {
+                    FileWriter writer = new FileWriter("cidades"+val3+".bin");
+
+                        for (int i=0; i <listaCidade.size()-1; i++){
+                            String x = listaCidade.get(i);
+                            StringBuffer b = new StringBuffer();
+                            for (int o = 0; o < x.length(); o++){
+                                //converte cada caractere para ASCII
+                                int val4 = (x.charAt(o));
+                
+                                //Converte ASCII para binário
+                                StringBuffer a = new StringBuffer();
+                                while(val4>0){
+                                    if(val4%2 == 0){
+                                        a.append("0");
+                                    }else{
+                                        a.append("1");
+                                    }
+                                    val4 /= 2;
+                                }
+                
+                                a.reverse();
+                                b.append(a+" ");
+                        
+                            }
+                            writer.write(b+"\n");
+                        }
+                    writer.close();
+                    }catch (IOException e){
+                        System.out.println("------------\nOcorreu um erro!\n------------\n");
+                        e.printStackTrace();
+                    }
+
+
+                    //-----------------------------------------------------------------------------------------------------------------------------------
+
+                    val3 = 0;
+                    validador2 = true;
+                    //Tenta criar um arquivo com número, para não haver conflito ou tentar escrever em cima de um arquivo já existente, se o próximo número de arquivo estiver disponivel,cria um arquivo com o número disponível
+                    while (validador2){
+                        try {
+                            File dosesFinal = new File("doses"+val3+".bin");
+                            if (dosesFinal.createNewFile()) {
+                                System.out.println("\n------------\nArquivo Criado: " + dosesFinal.getName()+"\n------------\n");
+                                validador2 = false;
+                            } else {
+                                val3 ++;
+                            }
+                            }catch(IOException e){
+                                System.out.println("\n------------\nOcorreu um erro!\n------------\n");
+                                e.printStackTrace();
+                            }
+                        }
+
+                    //Escreve no arquivo dado como disponível anteriormente, colocando o cabeçalho de "Município;Dose;Total Doses Aplicadas", e então escrevendo os dados e pulando uma linha
+                    try {
+                    FileWriter writer = new FileWriter("doses"+val3+".bin");
+                        for (int i=0; i <listaDose.size(); i++){
+                            String x = listaDose.get(i);
+                            StringBuffer b = new StringBuffer();
+                            
+                            for (int z=0; z <x.length(); z++){
+                                //Captura o valor inteiro de cada caractere na string
+                                int val4 = (x.charAt(z));
+                                //Converte ASCII para binário
+                                
+                                StringBuffer a = new StringBuffer();
+                                while(val4>0){
+                                    if(val4%2 == 0){
+                                        a.append("0");
+                                    }else{
+                                        a.append("1");
+                                    }
+                                    val4 /= 2;
+                                }
+                
+                                a.reverse();
+                                
+                                b.append(a+" ");
+                            }
+                            writer.write(b+"\n");
+                        }
+                    writer.close();
+                        
+                    }catch (IOException e){
+                        System.out.println("------------\nOcorreu um erro!\n------------\n");
+                        e.printStackTrace();
+                    }
+
+                    //-----------------------------------------------------------------------------------------------------------------------------------
+
+                    val3 = 0;
+                    validador2 = true;
+                    //Tenta criar um arquivo com número, para não haver conflito ou tentar escrever em cima de um arquivo já existente, se o próximo número de arquivo estiver disponivel,cria um arquivo com o número disponível
+                    while (validador2){
+                        try {
+                            File aplicadasFinal = new File("aplicadas"+val3+".bin");
+                            if (aplicadasFinal.createNewFile()) {
+                                System.out.println("\n------------\nArquivo Criado: " + aplicadasFinal.getName()+"\n------------\n");
+                                validador2 = false;
+                            } else {
+                                val3 ++;
+                            }
+                            }catch(IOException e){
+                                System.out.println("\n------------\nOcorreu um erro!\n------------\n");
+                                e.printStackTrace();
+                            }
+                        }
+
+                    //Escreve no arquivo dado como disponível anteriormente, colocando o cabeçalho de "Município;Dose;Total Doses Aplicadas", e então escrevendo os dados e pulando uma linha
+                    try {
+                    FileWriter writer = new FileWriter("aplicadas"+val3+".bin");
+                        for (int i=0; i <listaGeral.size(); i++){
+                            String x = listaGeral.get(i);
+                            StringBuffer b = new StringBuffer();
+                            
+                            for (int z=0; z <x.length(); z++){
+                                //Captura o valor inteiro de cada caractere na string
+                                int val4 = (x.charAt(z));
+                                //Converte ASCII para binário
+                                
+                                StringBuffer a = new StringBuffer();
+                                while(val4>0){
+                                    if(val4%2 == 0){
+                                        a.append("0");
+                                    }else{
+                                        a.append("1");
+                                    }
+                                    val4 /= 2;
+                                }
+                
+                                a.reverse();
+                                
+                                b.append(a+" ");
+                            }
+                            writer.write(b+"\n");
+                        }
+                    writer.close();
+                        
+                    }catch (IOException e){
+                        System.out.println("------------\nOcorreu um erro!\n------------\n");
+                        e.printStackTrace();
+                    }
+                    
+                    break;
 
                 case "0":
                     System.out.println("\nObrigado! Feito por Juliano Barreira Zorzetto - 2° Ciclo ADS - Vespertino");

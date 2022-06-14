@@ -33,6 +33,7 @@ public class DosesAplicadas {
     
                         String[] colunas = linha.split(";");
     
+                        //Se as colunas tiverem valor e o segundo não for "dose", adicionar na lista
                         if (colunas[0] != null && colunas[1] != null && colunas[2] != null && colunas[1].equalsIgnoreCase("dose") == false){
                             lista.add(colunas[0]);
                             lista.add(colunas[1]);
